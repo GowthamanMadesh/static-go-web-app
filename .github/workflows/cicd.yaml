@@ -1,0 +1,38 @@
+name: CICD Pipeline Go lang
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+    steps:
+        - name: checkout code
+          uses: actions/checkout@v4
+
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v4
+
+        - name: Login to Docker Hub
+          uses: docker/login-action@v4
+          with:
+            username: ${{ vars.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+            
+        - name: Build and push
+          uses: docker/build-push-action@v7
+          with:
+            context: .
+            path: ./Dockerfile
+            push: true
+            tags: ${{ secrets.DOCKERHUB_USERNAME }}/go-web-app:${{github.run_id}}
+
+         
+
+            
+
+         
+            
